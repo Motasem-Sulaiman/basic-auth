@@ -1,5 +1,5 @@
 const express = require('express');
-const { users } = require('./models/index');
+const { Users } = require('./models/index');
 const bcrypt = require('bcrypt');
 const basicAuth = require('./middleware/basic');
 
@@ -9,7 +9,7 @@ router.post('/signup',async(req,res,next)=>{
 
 let username=req.body.username
 let hashedPassword=await bcrypt.hash(req.body.password,5)
-const record=await users.create({
+const record=await Users.create({
 
 
     username:username,

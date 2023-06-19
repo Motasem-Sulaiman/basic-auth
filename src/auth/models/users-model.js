@@ -1,7 +1,7 @@
 'use strict'
 
 const users = (sequelize, DataTypes) =>
-    sequelize.define("users", {
+    sequelize.define("User", {
         username: {
             type: DataTypes.STRING,
             allowNull: false,
