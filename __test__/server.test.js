@@ -1,38 +1,36 @@
-// const supertest = require("supertest");
-// const { app } = require("../src/server");
-// const { users } = require("../src/auth/models/index");
-// const bcrypt = require("bcrypt");
+const request = require('supertest');
+const {app}  = require('../src/server');
 
-// const request = supertest(app);
+describe('Authentication Routes', () => {
+  describe('POST /signup', () => {
+    test('should create a new user', async () => {
+      const response = await request(app)
+        .post('/signup')
+        .send({ username: 'testuser', password: 'testpassword' });
 
-// describe("Authentication Routes", () => {
-//   beforeEach(async () => {
-//     await users.destroy({ where: {} });
-//   });
+      expect(response.status).toBe(201);
+      expect(response.body.username).toBe('testuser');
+    });
+  });
 
-//   it("should create a new user on POST /signup", async () => {
-//     const response = await request.post("/signup").send({
-//       username: "testuser",
-//       password: "testpassword",
-//     });
+  describe('POST /signin', () => {
+    test('should return the user object on successful login', async () => {
+      const response = await request(app)
+        .post('/signin')
+        .set('Authorization', `Basic ${Buffer.from('testuser:testpassword').toString('base64')}`);
 
-//     expect(response.status).toBe(201);
-//     expect(response.body.username).toBe("testuser");
-//   });
+      expect(response.status).toBe(201);
+      expect(response.body.user.username).toBe('testuser');
+    });
 
-//   it("should authenticate a user on POST /signin", async () => {
-//     const hashedPassword = await bcrypt.hash("testpassword", 5);
-//     await users.create({ username: "testuser", password: hashedPassword });
+    test('should return "Invalid Login" on unsuccessful login', async () => {
+      const response = await request(app)
+        .post('/signin')
+        .set('Authorization', `Basic ${Buffer.from('testuser:wrongpassword').toString('base64')}`);
 
-//     const response = await request
-//       .post("/signin")
-//       .set(
-//         "Authorization",
-//         "Basic " + Buffer.from("testuser:testpassword").toString("base64")
-//       )
-//       .send();
+      expect(response.status).toBe(500);
+      expect(response.text).toBe('wrong username or password');
+    });
+  });
+});
 
-//     expect(response.status).toBe(201);
-//     expect(response.body.user.username).toBe("testuser");
-//   });
-// });
