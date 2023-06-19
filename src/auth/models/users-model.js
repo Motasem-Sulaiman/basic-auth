@@ -14,3 +14,5 @@ const users = (sequelize, DataTypes) =>
 
 
 module.exports = users;
+
+//comment
