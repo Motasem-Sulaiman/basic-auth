@@ -1,4 +1,4 @@
-const {users}=require('../models/index')
+const {Users}=require('../models/index')
 const bcrypt = require('bcrypt');
 const base64=require('base-64')
 
@@ -8,7 +8,7 @@ let headersParts=req.headers.authorization.split(" ")
 let encodedValue=headersParts.pop();
 let decodedValue=base64.decode(encodedValue)
 let [username,password]=decodedValue.split(":")
-const user=await users.findOne({where:{username:username}})
+const user=await Users.findOne({where:{username:username}})
 const validUser= await bcrypt.compare(password,user.password)
 
 if(validUser){
